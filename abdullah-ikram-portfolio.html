@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABD.DEV — Software Engineer Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --bg2: #0a0a12;
+    --bg3: #0f0f1a;
+    --neon: #00ffe7;
+    --neon2: #ff00c8;
+    --neon3: #ffe600;
+    --neon4: #7b2fff;
+    --text: #e8e8f0;
+    --text2: #8888aa;
+    --card: #10101e;
+    --border: rgba(0,255,231,0.15);
+    --glow: 0 0 20px rgba(0,255,231,0.4);
+    --glow2: 0 0 20px rgba(255,0,200,0.4);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  #cursor {
+    position: fixed; width: 14px; height: 14px;
+    background: var(--neon); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width .15s, height .15s, background .15s;
+    mix-blend-mode: difference;
+    box-shadow: 0 0 15px var(--neon), 0 0 40px rgba(0,255,231,.3);
+  }
+  #cursor-ring {
+    position: fixed; width: 38px; height: 38px;
+    border: 1.5px solid var(--neon); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: all .08s ease-out;
+    opacity: .7;
+  }
+  body:hover #cursor { opacity: 1; }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9990; opacity: .5;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--neon); border-radius: 2px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: linear-gradient(180deg, rgba(5,5,8,.95) 0%, transparent 100%);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,255,231,.06);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 4px;
+    color: var(--neon);
+    text-shadow: var(--glow);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--neon2); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: var(--text2); text-decoration: none;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    transition: color .3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px; background: var(--neon);
+    transition: width .3s;
+  }
+  .nav-links a:hover { color: var(--neon); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 0 8vw;
+  }
+
+  /* Animated grid background */
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,231,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,231,.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+  @keyframes gridMove {
+    from { transform: translateY(0); }
+    to { transform: translateY(60px); }
+  }
+
+  /* Floating orbs */
+  .orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); animation: orbFloat 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .orb1 { width: 400px; height: 400px; background: rgba(0,255,231,.07); top: -100px; right: 10%; animation-delay: 0s; }
+  .orb2 { width: 300px; height: 300px; background: rgba(255,0,200,.07); bottom: 10%; left: 5%; animation-delay: -3s; }
+  .orb3 { width: 250px; height: 250px; background: rgba(123,47,255,.07); top: 40%; right: 30%; animation-delay: -6s; }
+  @keyframes orbFloat {
+    0%,100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 700px; }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(0,255,231,.07); border: 1px solid var(--border);
+    border-radius: 50px; padding: 8px 18px; margin-bottom: 28px;
+    font-size: 11px; letter-spacing: 3px; color: var(--neon);
+    animation: fadeUp .8s ease both;
+  }
+  .hero-tag::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--neon); border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--neon);
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(70px, 10vw, 130px);
+    line-height: .9;
+    letter-spacing: 2px;
+    animation: fadeUp .8s ease .1s both;
+  }
+  .hero-name .line1 { display: block; color: var(--text); }
+  .hero-name .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--neon), var(--neon2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(0,255,231,.4));
+  }
+
+  .hero-desc {
+    margin: 24px 0 40px;
+    color: var(--text2); line-height: 1.8; font-size: 13px;
+    animation: fadeUp .8s ease .2s both;
+  }
+
+  .hero-btns { display: flex; gap: 16px; animation: fadeUp .8s ease .3s both; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 32px; border-radius: 4px;
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    letter-spacing: 2px; text-transform: uppercase;
+    text-decoration: none; cursor: none;
+    transition: all .3s; border: none; outline: none;
+    position: relative; overflow: hidden;
+  }
+  .btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,.1));
+    opacity: 0; transition: opacity .3s;
+  }
+  .btn:hover::before { opacity: 1; }
+
+  .btn-primary {
+    background: var(--neon); color: var(--bg);
+    box-shadow: 0 0 30px rgba(0,255,231,.3);
+    font-weight: 700;
+  }
+  .btn-primary:hover { box-shadow: 0 0 50px rgba(0,255,231,.6); transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent; color: var(--neon);
+    border: 1px solid var(--neon);
+  }
+  .btn-outline:hover { background: rgba(0,255,231,.1); transform: translateY(-2px); box-shadow: var(--glow); }
+
+  .btn-ghost {
+    background: transparent; color: var(--text2);
+    border: 1px solid rgba(255,255,255,.1);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,.3); transform: translateY(-2px); }
+
+  /* ── ANIMATED CHARACTER ── */
+  .hero-character {
+    position: absolute; right: 6vw; bottom: 0;
+    width: 340px; height: 480px;
+    animation: charFloat 5s ease-in-out infinite;
+    z-index: 2;
+  }
+  @keyframes charFloat {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    33% { transform: translateY(-18px) rotate(1deg); }
+    66% { transform: translateY(-8px) rotate(-1deg); }
+  }
+
+  .char-shadow {
+    position: absolute; bottom: 10px; left: 50%;
+    transform: translateX(-50%);
+    width: 180px; height: 20px;
+    background: radial-gradient(ellipse, rgba(0,255,231,.3), transparent 70%);
+    border-radius: 50%; filter: blur(8px);
+    animation: shadowPulse 5s ease-in-out infinite;
+  }
+  @keyframes shadowPulse {
+    0%,100% { transform: translateX(-50%) scaleX(1); opacity: .6; }
+    33% { transform: translateX(-50%) scaleX(.7); opacity: .2; }
+  }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── SECTIONS BASE ── */
+  section { padding: 120px 8vw; position: relative; }
+
+  .section-label {
+    font-size: 10px; letter-spacing: 5px; color: var(--neon);
+    text-transform: uppercase; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::before { content: '//'; color: var(--neon2); }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 1; letter-spacing: 2px; margin-bottom: 20px;
+  }
+
+  .section-divider {
+    width: 60px; height: 2px;
+    background: linear-gradient(90deg, var(--neon), var(--neon2));
+    margin: 16px 0 48px;
+    box-shadow: 0 0 12px var(--neon);
+  }
+
+  /* ── STATS ── */
+  .stats-strip {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 8vw;
+    display: flex; gap: 0;
+    background: var(--bg2);
+    overflow: hidden;
+  }
+  .stat-item {
+    flex: 1; text-align: center; padding: 0 24px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px; line-height: 1;
+    background: linear-gradient(135deg, var(--neon), var(--neon2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-label { font-size: 10px; letter-spacing: 3px; color: var(--text2); margin-top: 4px; }
+
+  /* ── WORK / PORTFOLIO ── */
+  #work { background: var(--bg2); }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .port-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    cursor: none;
+    transition: transform .4s cubic-bezier(.23,1,.32,1), box-shadow .4s;
+  }
+  .port-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 30px rgba(0,255,231,.1); }
+
+  .port-card:nth-child(1) { grid-column: 1/8; grid-row: 1; min-height: 340px; }
+  .port-card:nth-child(2) { grid-column: 8/13; grid-row: 1; min-height: 340px; }
+  .port-card:nth-child(3) { grid-column: 1/5; min-height: 260px; }
+  .port-card:nth-child(4) { grid-column: 5/9; min-height: 260px; }
+  .port-card:nth-child(5) { grid-column: 9/13; min-height: 260px; }
+
+  .port-visual {
+    width: 100%; height: 65%;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .port-info {
+    padding: 20px 24px;
+  }
+  .port-tag {
+    font-size: 9px; letter-spacing: 3px; color: var(--neon);
+    background: rgba(0,255,231,.08); border: 1px solid rgba(0,255,231,.2);
+    padding: 4px 10px; border-radius: 50px; display: inline-block; margin-bottom: 8px;
+  }
+  .port-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
+  .port-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(0,255,231,.05), rgba(255,0,200,.05));
+    opacity: 0; transition: opacity .3s;
+  }
+  .port-card:hover .port-overlay { opacity: 1; }
+
+  /* Animated SVG visuals for cards */
+  .card-svg { width: 100%; height: 100%; }
+
+  /* ── SKILLS ── */
+  .skills-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+
+  .skill-bar-item { margin-bottom: 28px; }
+  .skill-bar-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; }
+  .skill-bar-track {
+    height: 4px; background: rgba(255,255,255,.06); border-radius: 2px; overflow: hidden;
+  }
+  .skill-bar-fill {
+    height: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, var(--neon), var(--neon2));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 1.4s cubic-bezier(.23,1,.32,1);
+    box-shadow: 0 0 8px var(--neon);
+  }
+  .skill-bar-fill.animated { transform: scaleX(1); }
+
+  .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+  .tool-chip {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 18px 16px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; transition: all .3s; cursor: none;
+  }
+  .tool-chip:hover {
+    border-color: var(--neon); background: rgba(0,255,231,.05);
+    transform: translateY(-2px); box-shadow: var(--glow);
+  }
+  .tool-icon { font-size: 22px; }
+
+  /* ── GRAVITY SECTION ── */
+  #gravity {
+    background: var(--bg3);
+    position: relative; overflow: hidden;
+  }
+
+  #gravity-canvas {
+    width: 100%; height: 520px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg);
+    display: block; cursor: none;
+    position: relative;
+  }
+
+  .gravity-controls {
+    display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; align-items: center;
+  }
+  .gravity-controls label { font-size: 11px; color: var(--text2); letter-spacing: 1px; }
+  .gravity-controls input[type=range] {
+    -webkit-appearance: none; height: 3px; background: rgba(0,255,231,.2);
+    border-radius: 2px; outline: none; width: 120px;
+  }
+  .gravity-controls input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 14px; height: 14px;
+    background: var(--neon); border-radius: 50%; cursor: none;
+    box-shadow: 0 0 8px var(--neon);
+  }
+
+  /* ── GAMES ── */
+  #games { background: var(--bg2); }
+
+  .games-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+
+  .game-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    transition: all .4s cubic-bezier(.23,1,.32,1); cursor: none;
+  }
+  .game-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 40px rgba(255,0,200,.1); border-color: var(--neon2); }
+
+  .game-preview {
+    height: 200px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; background: var(--bg);
+  }
+  .game-info { padding: 20px 22px 22px; }
+  .game-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+  .game-desc { font-size: 11px; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
+
+  /* Active game container */
+  .game-active {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(5,5,8,.95);
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(20px);
+  }
+  .game-active.open { display: flex; }
+  .game-active-inner { position: relative; }
+  .game-close {
+    position: absolute; top: -48px; right: 0;
+    background: none; border: 1px solid var(--border);
+    color: var(--text); font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 2px; padding: 8px 18px;
+    border-radius: 4px; cursor: none; transition: all .3s;
+  }
+  .game-close:hover { background: rgba(255,0,200,.1); border-color: var(--neon2); color: var(--neon2); }
+
+  canvas { display: block; }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--bg); text-align: center; }
+
+  .contact-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(50px, 9vw, 120px);
+    line-height: 1; letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--text), var(--neon), var(--neon2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 32px;
+  }
+  .contact-links { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+
+  .social-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 28px; border: 1px solid var(--border);
+    border-radius: 50px; color: var(--text2); text-decoration: none;
+    font-size: 11px; letter-spacing: 2px; transition: all .3s; cursor: none;
+  }
+  .social-btn:hover { border-color: var(--neon); color: var(--neon); box-shadow: var(--glow); transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 8vw; display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; color: var(--text2); letter-spacing: 1px;
+    background: var(--bg2);
+  }
+
+  /* ── LOADING SCREEN ── */
+  #loader {
+    position: fixed; inset: 0; z-index: 9995;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 24px;
+    transition: opacity .8s ease, visibility .8s;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+
+  .loader-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px; letter-spacing: 8px; color: var(--neon);
+    text-shadow: var(--glow);
+  }
+  .loader-bar {
+    width: 200px; height: 2px; background: rgba(0,255,231,.15); border-radius: 1px;
+  }
+  .loader-fill {
+    height: 100%; background: linear-gradient(90deg, var(--neon), var(--neon2));
+    border-radius: 1px; width: 0%;
+    transition: width 1.4s cubic-bezier(.23,1,.32,1);
+    box-shadow: 0 0 10px var(--neon);
+  }
+  .loader-txt { font-size: 10px; letter-spacing: 3px; color: var(--text2); }
+
+  /* ── GLITCH TEXT ── */
+  .glitch {
+    position: relative;
+  }
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: inherit;
+    background: linear-gradient(135deg, var(--neon), var(--neon2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .glitch::before { animation: glitch1 4s infinite; clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%); }
+  .glitch::after { animation: glitch2 4s infinite; clip-path: polygon(0 66%, 100% 66%, 100% 100%, 0 100%); }
+  @keyframes glitch1 {
+    0%,90%,100% { transform: none; opacity: 1; }
+    91% { transform: translateX(-4px); opacity: .8; }
+    93% { transform: translateX(4px); opacity: .8; }
+    95% { transform: none; opacity: 1; }
+  }
+  @keyframes glitch2 {
+    0%,94%,100% { transform: none; opacity: 1; }
+    95% { transform: translateX(4px); opacity: .8; }
+    97% { transform: translateX(-2px); opacity: .8; }
+    99% { transform: none; opacity: 1; }
+  }
+
+  /* ── SCAN LINE ── */
+  .scan-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon), transparent);
+    animation: scanMove 6s linear infinite;
+    pointer-events: none; opacity: .4;
+  }
+  @keyframes scanMove { from{top:0} to{top:100%} }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 16px 0; background: var(--bg2);
+  }
+  .marquee-track {
+    display: flex; gap: 48px; white-space: nowrap;
+    animation: marqueeScroll 18s linear infinite;
+  }
+  .marquee-track span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 4px; color: var(--text2);
+  }
+  .marquee-track span.accent { color: var(--neon); }
+  @keyframes marqueeScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ── ANIMATED BG PARTICLES (canvas) ── */
+  #particle-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none; opacity: .4;
+  }
+  
+  section, nav, footer { position: relative; z-index: 1; }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { gap: 20px; }
+    section { padding: 80px 6vw; }
+    .portfolio-grid { grid-template-columns: 1fr 1fr; }
+    .port-card:nth-child(1), .port-card:nth-child(2),
+    .port-card:nth-child(3), .port-card:nth-child(4),
+    .port-card:nth-child(5) { grid-column: auto; grid-row: auto; }
+    .skills-layout { grid-template-columns: 1fr; gap: 40px; }
+    .games-grid { grid-template-columns: 1fr 1fr; }
+    .hero-character { width: 200px; height: 280px; right: 2vw; }
+    .stats-strip { flex-wrap: wrap; }
+    .stat-item { flex: 0 0 50%; border-right: none; border-bottom: 1px solid var(--border); }
+  }
+  @media(max-width:600px) {
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .games-grid { grid-template-columns: 1fr; }
+    .hero-character { display: none; }
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">ABDULLAH</div>
+  <div class="loader-bar"><div class="loader-fill" id="loader-fill"></div></div>
+  <div class="loader-txt" id="loader-txt">INITIALIZING...</div>
+</div>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- PARTICLES -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- GAME OVERLAY -->
+<div class="game-active" id="game-overlay">
+  <div class="game-active-inner">
+    <button class="game-close" id="game-close">✕ CLOSE GAME</button>
+    <canvas id="game-canvas" width="600" height="500"></canvas>
+    <div id="game-ui" style="text-align:center;margin-top:14px;font-size:13px;color:var(--text2);letter-spacing:2px;"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">ABD<span>.</span>DEV</a>
+  <ul class="nav-links">
+    <li><a href="#work">WORK</a></li>
+    <li><a href="#skills">SKILLS</a></li>
+    <li><a href="#games">GAMES</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="grid-bg"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="scan-line"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">AVAILABLE FOR HIRE · 2026</div>
+    <h1 class="hero-name">
+      <span class="line1">ABDULLAH</span>
+      <span class="line2 glitch" data-text="IKRAM">IKRAM</span>
+    </h1>
+    <p class="hero-desc">
+      Software Engineer building full-stack applications, intelligent tools,<br>
+      and AI-powered products — faster and smarter than the rest.<br>
+      <span style="color:var(--neon)">Based in Karachi, Pakistan.</span>
+    </p>
+    <div class="hero-btns">
+      <a href="#work" class="btn btn-primary">VIEW WORK →</a>
+      <a href="#contact" class="btn btn-outline">GET IN TOUCH</a>
+    </div>
+  </div>
+
+  <!-- Animated SVG Character -->
+  <div class="hero-character" id="hero-char">
+    <svg viewBox="0 0 340 480" fill="none" xmlns="http://www.w3.org/2000/svg" id="char-svg">
+      <!-- Body glow -->
+      <ellipse cx="170" cy="320" rx="90" ry="110" fill="url(#bodyGrad)" opacity=".9"/>
+      <!-- Head -->
+      <ellipse cx="170" cy="130" rx="68" ry="72" fill="url(#headGrad)"/>
+      <!-- Visor -->
+      <ellipse cx="170" cy="128" rx="52" ry="28" fill="#000810" opacity=".9"/>
+      <ellipse cx="170" cy="128" rx="52" ry="28" fill="none" stroke="url(#visorStroke)" stroke-width="2"/>
+      <!-- Visor glow inside -->
+      <ellipse cx="170" cy="128" rx="46" ry="22" fill="url(#visorGlow)" opacity=".6">
+        <animate attributeName="opacity" values=".4;.8;.4" dur="2.5s" repeatCount="indefinite"/>
+      </ellipse>
+      <!-- Eyes -->
+      <circle cx="148" cy="126" r="10" fill="url(#eyeGrad)">
+        <animate attributeName="r" values="10;11;10" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="192" cy="126" r="10" fill="url(#eyeGrad)">
+        <animate attributeName="r" values="10;11;10" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Ear pieces -->
+      <rect x="95" y="110" width="14" height="28" rx="7" fill="url(#accentGrad)"/>
+      <rect x="231" y="110" width="14" height="28" rx="7" fill="url(#accentGrad)"/>
+      <!-- Neck -->
+      <rect x="150" y="195" width="40" height="30" rx="8" fill="#1a1a2e"/>
+      <!-- Torso -->
+      <rect x="90" y="225" width="160" height="170" rx="20" fill="url(#torsoGrad)"/>
+      <!-- Chest panel -->
+      <rect x="120" y="250" width="100" height="60" rx="10" fill="#000810" opacity=".7"/>
+      <rect x="120" y="250" width="100" height="60" rx="10" fill="none" stroke="url(#panelStroke)" stroke-width="1.5"/>
+      <!-- Panel lights -->
+      <circle cx="140" cy="270" r="6" fill="var(--neon)">
+        <animate attributeName="fill" values="#00ffe7;#ffffff;#00ffe7" dur="1.8s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="6;7;6" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="160" cy="270" r="6" fill="var(--neon2)">
+        <animate attributeName="fill" values="#ff00c8;#ffffff;#ff00c8" dur="2.2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="180" cy="270" r="6" fill="var(--neon3)">
+        <animate attributeName="fill" values="#ffe600;#ffffff;#ffe600" dur="2.6s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Panel bar -->
+      <rect x="130" y="290" width="80" height="8" rx="4" fill="rgba(0,255,231,.15)"/>
+      <rect x="130" y="290" width="50" height="8" rx="4" fill="url(#barGrad)">
+        <animate attributeName="width" values="30;70;30" dur="3s" repeatCount="indefinite"/>
+      </rect>
+      <!-- Arms -->
+      <rect x="50" y="230" width="42" height="130" rx="20" fill="url(#armGrad)">
+        <animateTransform attributeName="transform" type="rotate" values="-5 71 230;5 71 230;-5 71 230" dur="4s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="248" y="230" width="42" height="130" rx="20" fill="url(#armGrad)">
+        <animateTransform attributeName="transform" type="rotate" values="5 269 230;-5 269 230;5 269 230" dur="4s" repeatCount="indefinite"/>
+      </rect>
+      <!-- Hands -->
+      <circle cx="71" cy="374" r="22" fill="url(#headGrad)"/>
+      <circle cx="269" cy="374" r="22" fill="url(#headGrad)"/>
+      <!-- Legs -->
+      <rect x="105" y="388" width="55" height="80" rx="18" fill="url(#legGrad)"/>
+      <rect x="180" y="388" width="55" height="80" rx="18" fill="url(#legGrad)"/>
+      <!-- Feet -->
+      <ellipse cx="132" cy="466" rx="34" ry="12" fill="url(#accentGrad)"/>
+      <ellipse cx="207" cy="466" rx="34" ry="12" fill="url(#accentGrad)"/>
+      <!-- Floating particles around character -->
+      <circle cx="60" cy="180" r="4" fill="var(--neon)" opacity=".8">
+        <animate attributeName="cy" values="180;160;180" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values=".8;.2;.8" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="290" cy="200" r="3" fill="var(--neon2)" opacity=".7">
+        <animate attributeName="cy" values="200;220;200" dur="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values=".7;.2;.7" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="80" cy="300" r="5" fill="var(--neon3)" opacity=".6">
+        <animate attributeName="cy" values="300;280;300" dur="3.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values=".6;.1;.6" dur="3.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="280" cy="140" r="3" fill="var(--neon)" opacity=".5">
+        <animate attributeName="cy" values="140;120;140" dur="4s" repeatCount="indefinite"/>
+      </circle>
+
+      <defs>
+        <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a1a3e"/>
+          <stop offset="100%" stop-color="#0a0a1e"/>
+        </linearGradient>
+        <linearGradient id="headGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#2a2a4e"/>
+          <stop offset="100%" stop-color="#1a1a2e"/>
+        </linearGradient>
+        <linearGradient id="visorStroke" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#00ffe7"/>
+          <stop offset="100%" stop-color="#ff00c8"/>
+        </linearGradient>
+        <radialGradient id="visorGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#00ffe7"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+        <radialGradient id="eyeGrad" cx="30%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="40%" stop-color="#00ffe7"/>
+          <stop offset="100%" stop-color="#004d47"/>
+        </radialGradient>
+        <linearGradient id="accentGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#00ffe7"/>
+          <stop offset="100%" stop-color="#7b2fff"/>
+        </linearGradient>
+        <linearGradient id="torsoGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1e1e3f"/>
+          <stop offset="100%" stop-color="#0d0d20"/>
+        </linearGradient>
+        <linearGradient id="panelStroke" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="rgba(0,255,231,.5)"/>
+          <stop offset="100%" stop-color="rgba(255,0,200,.3)"/>
+        </linearGradient>
+        <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#00ffe7"/>
+          <stop offset="100%" stop-color="#ff00c8"/>
+        </linearGradient>
+        <linearGradient id="armGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#252545"/>
+          <stop offset="100%" stop-color="#0d0d1a"/>
+        </linearGradient>
+        <linearGradient id="legGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a1a38"/>
+          <stop offset="100%" stop-color="#0a0a16"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="char-shadow"></div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip" style="justify-content:center;">
+  <div class="stat-item" style="flex:0 0 auto;padding:0 60px;border-right:none;">
+    <div class="stat-num" data-count="3">0</div>
+    <div class="stat-label">PERSONAL PROJECTS</div>
+  </div>
+  <div class="stat-item" style="flex:0 0 auto;padding:0 60px;border-right:none;">
+    <div class="stat-num" style="-webkit-text-fill-color:unset;background:none;color:var(--neon);">∞</div>
+    <div class="stat-label">PROBLEMS SOLVED WITH AI</div>
+  </div>
+  <div class="stat-item" style="flex:0 0 auto;padding:0 60px;border-right:none;">
+    <div class="stat-num" style="-webkit-text-fill-color:unset;background:none;color:var(--neon2);">10×</div>
+    <div class="stat-label">FASTER WITH AI TOOLS</div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>FULL-STACK DEV</span><span class="accent">✦</span>
+    <span>JAVASCRIPT</span><span class="accent">✦</span>
+    <span>AI INTEGRATION</span><span class="accent">✦</span>
+    <span>REACT</span><span class="accent">✦</span>
+    <span>NODE.JS</span><span class="accent">✦</span>
+    <span>SIGN LANGUAGE AI</span><span class="accent">✦</span>
+    <span>PROBLEM SOLVING</span><span class="accent">✦</span>
+    <span>OPEN TO WORK</span><span class="accent">✦</span>
+    <span>FULL-STACK DEV</span><span class="accent">✦</span>
+    <span>JAVASCRIPT</span><span class="accent">✦</span>
+    <span>AI INTEGRATION</span><span class="accent">✦</span>
+    <span>REACT</span><span class="accent">✦</span>
+    <span>NODE.JS</span><span class="accent">✦</span>
+    <span>SIGN LANGUAGE AI</span><span class="accent">✦</span>
+    <span>PROBLEM SOLVING</span><span class="accent">✦</span>
+    <span>OPEN TO WORK</span><span class="accent">✦</span>
+  </div>
+</div>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-label">PERSONAL PROJECTS</div>
+  <h2 class="section-title">MY WORK</h2>
+  <div class="section-divider"></div>
+
+  <div class="portfolio-grid">
+    <!-- Card 1 -->
+    <div class="port-card">
+      <div class="port-visual">
+        <svg class="card-svg" viewBox="0 0 500 220">
+          <defs>
+            <radialGradient id="rg1" cx="50%" cy="50%" r="70%">
+              <stop offset="0%" stop-color="#7b2fff" stop-opacity=".5"/>
+              <stop offset="100%" stop-color="#050508" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="500" height="220" fill="#050508"/>
+          <rect width="500" height="220" fill="url(#rg1)"/>
+          <!-- Abstract brand mark -->
+          <g transform="translate(250,110)">
+            <polygon points="0,-70 60.6,35 -60.6,35" fill="none" stroke="#7b2fff" stroke-width="2">
+              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="12s" repeatCount="indefinite"/>
+            </polygon>
+            <polygon points="0,-50 43.3,25 -43.3,25" fill="none" stroke="#00ffe7" stroke-width="1.5">
+              <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="8s" repeatCount="indefinite"/>
+            </polygon>
+            <circle r="20" fill="none" stroke="#ff00c8" stroke-width="2">
+              <animate attributeName="r" values="20;24;20" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="6" fill="#00ffe7">
+              <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+          <text x="40" y="40" fill="rgba(0,255,231,.15)" font-family="'Bebas Neue'" font-size="80" letter-spacing="4">APEX</text>
+        </svg>
+        <div class="port-overlay"></div>
+      </div>
+      <div class="port-info">
+        <span class="port-tag">FULL-STACK APP</span>
+        <div class="port-title">PORTIFY — AI-POWERED PORTFOLIO BUILDER</div>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="port-card">
+      <div class="port-visual">
+        <svg class="card-svg" viewBox="0 0 300 220">
+          <rect width="300" height="220" fill="#050508"/>
+          <defs>
+            <linearGradient id="waveGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#00ffe7"/>
+              <stop offset="100%" stop-color="#ff00c8"/>
+            </linearGradient>
+          </defs>
+          <!-- Sound wave visualization -->
+          <g transform="translate(0,110)">
+            <path id="wave1" stroke="url(#waveGrad)" stroke-width="2" fill="none" opacity=".8">
+              <animate attributeName="d" values="
+                M0,0 Q30,-30 60,0 Q90,30 120,0 Q150,-30 180,0 Q210,30 240,0 Q270,-30 300,0;
+                M0,0 Q30,40 60,0 Q90,-40 120,0 Q150,40 180,0 Q210,-40 240,0 Q270,40 300,0;
+                M0,0 Q30,-30 60,0 Q90,30 120,0 Q150,-30 180,0 Q210,30 240,0 Q270,-30 300,0"
+                dur="2s" repeatCount="indefinite"/>
+            </path>
+            <path stroke="rgba(0,255,231,.3)" stroke-width="1" fill="none">
+              <animate attributeName="d" values="
+                M0,0 Q30,-50 60,0 Q90,50 120,0 Q150,-50 180,0 Q210,50 240,0 Q270,-50 300,0;
+                M0,0 Q30,60 60,0 Q90,-60 120,0 Q150,60 180,0 Q210,-60 240,0 Q270,60 300,0;
+                M0,0 Q30,-50 60,0 Q90,50 120,0 Q150,-50 180,0 Q210,50 240,0 Q270,-50 300,0"
+                dur="1.5s" repeatCount="indefinite"/>
+            </path>
+          </g>
+          <text x="20" y="200" fill="rgba(255,255,255,.07)" font-family="'Bebas Neue'" font-size="32" letter-spacing="4">SOUNDWAVE</text>
+        </svg>
+        <div class="port-overlay"></div>
+      </div>
+      <div class="port-info">
+        <span class="port-tag">AI / ML PROJECT</span>
+        <div class="port-title">SIGN SANG — SIGN LANGUAGE CONVERTER</div>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="port-card">
+      <div class="port-visual">
+        <svg class="card-svg" viewBox="0 0 240 170">
+          <rect width="240" height="170" fill="#050508"/>
+          <defs>
+            <radialGradient id="rg3" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stop-color="#ff00c8" stop-opacity=".3"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <rect width="240" height="170" fill="url(#rg3)"/>
+          <!-- Grid of boxes -->
+          <g>
+            <rect x="30" y="30" width="40" height="40" rx="4" fill="none" stroke="#ff00c8" stroke-width="1.5" opacity=".7">
+              <animate attributeName="opacity" values=".7;.2;.7" dur="2s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="80" y="30" width="40" height="40" rx="4" fill="rgba(255,0,200,.2)" stroke="#ff00c8" stroke-width="1">
+              <animate attributeName="opacity" values=".5;1;.5" dur="2.5s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="130" y="30" width="40" height="40" rx="4" fill="none" stroke="#ff00c8" stroke-width="1" opacity=".4">
+              <animate attributeName="opacity" values=".4;.8;.4" dur="3s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="30" y="80" width="90" height="14" rx="4" fill="rgba(255,0,200,.3)"/>
+            <rect x="30" y="102" width="60" height="8" rx="4" fill="rgba(255,0,200,.15)"/>
+            <rect x="30" y="118" width="80" height="8" rx="4" fill="rgba(255,0,200,.1)"/>
+          </g>
+        </svg>
+        <div class="port-overlay"></div>
+      </div>
+      <div class="port-info">
+        <span class="port-tag">WEB APP</span>
+        <div class="port-title">PROJECT 3 — IN DEVELOPMENT</div>
+      </div>
+    </div>
+    <!-- Card 4 -->
+    <div class="port-card">
+      <div class="port-visual">
+        <svg class="card-svg" viewBox="0 0 240 170">
+          <rect width="240" height="170" fill="#050508"/>
+          <!-- Geometric abstract -->
+          <g transform="translate(120,85)">
+            <rect x="-50" y="-50" width="100" height="100" fill="none" stroke="rgba(0,255,231,.4)" stroke-width="1.5">
+              <animateTransform attributeName="transform" type="rotate" from="0" to="45" dur="6s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="-36" y="-36" width="72" height="72" fill="none" stroke="rgba(255,230,0,.5)" stroke-width="1">
+              <animateTransform attributeName="transform" type="rotate" from="45" to="0" dur="4s" repeatCount="indefinite"/>
+            </rect>
+            <circle r="25" fill="none" stroke="rgba(123,47,255,.6)" stroke-width="2">
+              <animate attributeName="r" values="25;30;25" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="8" fill="#ffe600" opacity=".9"/>
+          </g>
+          <text x="15" y="158" fill="rgba(255,230,0,.1)" font-family="'Bebas Neue'" font-size="40" letter-spacing="2">ORBIT</text>
+        </svg>
+        <div class="port-overlay"></div>
+      </div>
+      <div class="port-info">
+        <span class="port-tag">AI TOOLS</span>
+        <div class="port-title">AI WORKFLOW AUTOMATION</div>
+      </div>
+    </div>
+    <!-- Card 5 -->
+    <div class="port-card">
+      <div class="port-visual">
+        <svg class="card-svg" viewBox="0 0 240 170">
+          <rect width="240" height="170" fill="#050508"/>
+          <defs>
+            <radialGradient id="rg5" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stop-color="#00ffe7" stop-opacity=".2"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <rect width="240" height="170" fill="url(#rg5)"/>
+          <!-- Typography layout -->
+          <text x="20" y="70" fill="#00ffe7" font-family="'Bebas Neue'" font-size="52" letter-spacing="2" opacity=".9">TYPE</text>
+          <text x="24" y="110" fill="rgba(255,255,255,.5)" font-family="'Space Mono'" font-size="11">FACES OF THE FUTURE</text>
+          <line x1="20" y1="120" x2="160" y2="120" stroke="#00ffe7" stroke-width="1" opacity=".4"/>
+          <text x="20" y="145" fill="rgba(255,255,255,.15)" font-family="'Bebas Neue'" font-size="18">ABCDEFGHIJKLMNOPQRST</text>
+          <line x1="180" y1="60" x2="220" y2="60" stroke="#ff00c8" stroke-width="3" stroke-linecap="round">
+            <animate attributeName="x2" values="180;220;180" dur="2s" repeatCount="indefinite"/>
+          </line>
+        </svg>
+        <div class="port-overlay"></div>
+      </div>
+      <div class="port-info">
+        <span class="port-tag">OPEN SOURCE</span>
+        <div class="port-title">DEVELOPER UTILITIES & SCRIPTS</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">EXPERTISE</div>
+  <h2 class="section-title">SKILLS &amp; TOOLS</h2>
+  <div class="section-divider"></div>
+
+  <div class="skills-layout">
+    <div class="skill-bars">
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>JavaScript / TypeScript</span><span style="color:var(--neon)">85%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="--w:.85"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>Full-Stack Development</span><span style="color:var(--neon)">80%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="--w:.80"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>AI Tools & Integration</span><span style="color:var(--neon)">90%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="--w:.90"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>React / Next.js</span><span style="color:var(--neon)">78%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="--w:.78"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>MS Office Suite</span><span style="color:var(--neon)">92%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="--w:.92"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-header"><span>Communication & Teamwork</span><span style="color:var(--neon)">88%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="--w:.88"></div></div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:10px;letter-spacing:3px;color:var(--text2);margin-bottom:20px;text-transform:uppercase;">TOOLS I USE</div>
+      <div class="tools-grid">
+        <div class="tool-chip"><span class="tool-icon">💻</span>VS Code</div>
+        <div class="tool-chip"><span class="tool-icon">⚛️</span>React</div>
+        <div class="tool-chip"><span class="tool-icon">🟨</span>JavaScript</div>
+        <div class="tool-chip"><span class="tool-icon">🌿</span>Node.js</div>
+        <div class="tool-chip"><span class="tool-icon">🐙</span>Git / GitHub</div>
+        <div class="tool-chip"><span class="tool-icon">🤖</span>ChatGPT / Claude</div>
+        <div class="tool-chip"><span class="tool-icon">📊</span>MS Office</div>
+        <div class="tool-chip"><span class="tool-icon">🗄️</span>MongoDB</div>
+        <div class="tool-chip"><span class="tool-icon">🐍</span>Python</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GRAVITY SECTION -->
+<section id="gravity">
+  <div class="section-label">INTERACTIVE PHYSICS</div>
+  <h2 class="section-title">FREE GRAVITY</h2>
+  <div class="section-divider"></div>
+  <p style="color:var(--text2);font-size:12px;line-height:1.8;margin-bottom:24px;">
+    Click & drag to spawn objects · Watch them fall and bounce · Adjust gravity &amp; bounciness
+  </p>
+
+  <canvas id="gravity-canvas"></canvas>
+
+  <div class="gravity-controls">
+    <label>GRAVITY</label>
+    <input type="range" id="grav-slider" min="0.1" max="3" step="0.1" value="0.8">
+    <label style="margin-left:20px">BOUNCE</label>
+    <input type="range" id="bounce-slider" min="0" max="0.99" step="0.01" value="0.7">
+    <button class="btn btn-outline" id="grav-clear" style="padding:8px 18px;font-size:10px;margin-left:16px;">CLEAR</button>
+    <button class="btn btn-ghost" id="grav-explode" style="padding:8px 18px;font-size:10px;">EXPLODE ✦</button>
+    <span style="margin-left:auto;font-size:10px;color:var(--text2)" id="obj-count">OBJECTS: 0</span>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section id="games">
+  <div class="section-label">INTERACTIVE FUN</div>
+  <h2 class="section-title">MINI GAMES</h2>
+  <div class="section-divider"></div>
+
+  <div class="games-grid">
+    <!-- Neon Pong -->
+    <div class="game-card">
+      <div class="game-preview" id="pong-preview">
+        <svg width="100%" height="100%" viewBox="0 0 300 200">
+          <rect width="300" height="200" fill="#050508"/>
+          <line x1="150" y1="0" x2="150" y2="200" stroke="rgba(0,255,231,.15)" stroke-width="2" stroke-dasharray="8 8"/>
+          <rect x="10" y="70" width="10" height="60" rx="4" fill="url(#pg1)"/>
+          <rect x="280" y="70" width="10" height="60" rx="4" fill="url(#pg1)"/>
+          <circle cx="150" cy="100" r="8" fill="#00ffe7">
+            <animate attributeName="cx" values="150;220;220;80;80;150" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="100;60;140;100;60;100" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <defs>
+            <linearGradient id="pg1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00ffe7"/><stop offset="100%" stop-color="#7b2fff"/>
+            </linearGradient>
+          </defs>
+          <text x="100" y="180" fill="rgba(0,255,231,.3)" font-family="'Bebas Neue'" font-size="18" letter-spacing="4">NEON PONG</text>
+        </svg>
+      </div>
+      <div class="game-info">
+        <div class="game-title">NEON PONG</div>
+        <div class="game-desc">Classic pong with neon visuals. Use W/S to move your paddle. First to 7 wins!</div>
+        <button class="btn btn-primary" onclick="launchGame('pong')" style="width:100%;justify-content:center">PLAY NOW →</button>
+      </div>
+    </div>
+
+    <!-- Asteroid Blaster -->
+    <div class="game-card">
+      <div class="game-preview">
+        <svg width="100%" height="100%" viewBox="0 0 300 200">
+          <rect width="300" height="200" fill="#050508"/>
+          <!-- Stars -->
+          <circle cx="20" cy="20" r="1.5" fill="white" opacity=".5"/>
+          <circle cx="80" cy="50" r="1" fill="white" opacity=".4"/>
+          <circle cx="200" cy="30" r="1.5" fill="white" opacity=".6"/>
+          <circle cx="260" cy="70" r="1" fill="white" opacity=".3"/>
+          <circle cx="140" cy="15" r="1" fill="white" opacity=".5"/>
+          <circle cx="40" cy="80" r="1.5" fill="white" opacity=".4"/>
+          <!-- Ship -->
+          <polygon points="150,150 140,175 160,175" fill="none" stroke="#00ffe7" stroke-width="2"/>
+          <line x1="150" y1="148" x2="150" y2="120" stroke="#ff00c8" stroke-width="2" stroke-linecap="round" opacity=".8">
+            <animate attributeName="opacity" values=".8;0;.8" dur=".5s" repeatCount="indefinite"/>
+          </line>
+          <!-- Asteroids -->
+          <polygon points="60,60 75,50 90,62 85,78 65,75" fill="none" stroke="rgba(255,230,0,.6)" stroke-width="1.5">
+            <animateTransform attributeName="transform" type="rotate" from="0 75 64" to="360 75 64" dur="6s" repeatCount="indefinite"/>
+          </polygon>
+          <polygon points="220,40 235,30 250,42 245,58 225,55" fill="none" stroke="rgba(255,0,200,.5)" stroke-width="1.5">
+            <animateTransform attributeName="transform" type="rotate" from="0 235 44" to="360 235 44" dur="4s" repeatCount="indefinite"/>
+          </polygon>
+          <text x="70" y="190" fill="rgba(255,0,200,.3)" font-family="'Bebas Neue'" font-size="18" letter-spacing="4">ASTEROID</text>
+        </svg>
+      </div>
+      <div class="game-info">
+        <div class="game-title">ASTEROID BLASTER</div>
+        <div class="game-desc">Shoot asteroids with your spaceship. Arrow keys to move, SPACE to fire!</div>
+        <button class="btn btn-primary" onclick="launchGame('asteroid')" style="width:100%;justify-content:center">PLAY NOW →</button>
+      </div>
+    </div>
+
+    <!-- Color Memory -->
+    <div class="game-card">
+      <div class="game-preview">
+        <svg width="100%" height="100%" viewBox="0 0 300 200">
+          <rect width="300" height="200" fill="#050508"/>
+          <!-- Memory grid -->
+          <g transform="translate(60,40)">
+            <rect x="0" y="0" width="50" height="50" rx="6" fill="#00ffe7" opacity=".7">
+              <animate attributeName="opacity" values=".7;.2;.7" dur="2s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="60" y="0" width="50" height="50" rx="6" fill="#ff00c8" opacity=".5">
+              <animate attributeName="opacity" values=".5;.9;.5" dur="2.5s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="120" y="0" width="50" height="50" rx="6" fill="#ffe600" opacity=".6">
+              <animate attributeName="opacity" values=".6;.1;.6" dur="3s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="0" y="60" width="50" height="50" rx="6" fill="#7b2fff" opacity=".6"/>
+            <rect x="60" y="60" width="50" height="50" rx="6" fill="#00ffe7" opacity=".3"/>
+            <rect x="120" y="60" width="50" height="50" rx="6" fill="#ff00c8" opacity=".8">
+              <animate attributeName="opacity" values=".8;.3;.8" dur="1.5s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+          <text x="60" y="188" fill="rgba(123,47,255,.4)" font-family="'Bebas Neue'" font-size="18" letter-spacing="4">COLOR MEMORY</text>
+        </svg>
+      </div>
+      <div class="game-info">
+        <div class="game-title">COLOR MEMORY</div>
+        <div class="game-desc">Match the neon color pairs before time runs out. Test your visual memory!</div>
+        <button class="btn btn-primary" onclick="launchGame('memory')" style="width:100%;justify-content:center">PLAY NOW →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">GET IN TOUCH</div>
+  <div class="contact-big">LET'S BUILD<br>SOMETHING</div>
+  <p style="color:var(--text2);font-size:13px;line-height:1.8;max-width:560px;margin:0 auto;">
+    Have a project, idea, or opportunity? I'm a software engineer who leverages AI<br>
+    to deliver results faster — let's talk and make it happen.
+  </p>
+  <div style="margin-top:40px">
+    <a href="mailto:abdullahikram316@gmail.com" class="btn btn-primary" style="font-size:13px;padding:18px 48px;">
+      abdullahikram316@gmail.com →
+    </a>
+  </div>
+  <div class="contact-links">
+    <a href="https://www.instagram.com/abdul_lah__ik/" target="_blank" rel="noopener" class="social-btn">⬟ INSTAGRAM</a>
+    <a href="https://www.linkedin.com/in/abdullah-undefined-7aa769391/" target="_blank" rel="noopener" class="social-btn">△ LINKEDIN</a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 ABDULLAH IKRAM — ALL RIGHTS RESERVED</span>
+  <span style="color:var(--neon)">BUILT WITH ✦ &amp; AI</span>
+  <span>ABD.DEV</span>
+</footer>
+
+<script>
+/* ── LOADER ── */
+window.addEventListener('load', () => {
+  const fill = document.getElementById('loader-fill');
+  const txt = document.getElementById('loader-txt');
+  const msgs = ['INITIALIZING...','LOADING ASSETS...','RENDERING VISUALS...','READY.'];
+  let i = 0;
+  const iv = setInterval(() => {
+    i++;
+    fill.style.width = (i * 25) + '%';
+    txt.textContent = msgs[i - 1] || 'READY.';
+    if (i >= 4) {
+      clearInterval(iv);
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+        initParticles();
+        initGravity();
+        animateStats();
+        animateSkillBars();
+      }, 400);
+    }
+  }, 350);
+});
+
+/* ── CURSOR ── */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+document.querySelectorAll('a,button,.btn,.port-card,.game-card,.tool-chip').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cur.style.width = '24px'; cur.style.height = '24px';
+    ring.style.width = '56px'; ring.style.height = '56px';
+    ring.style.borderColor = 'var(--neon2)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cur.style.width = '14px'; cur.style.height = '14px';
+    ring.style.width = '38px'; ring.style.height = '38px';
+    ring.style.borderColor = 'var(--neon)';
+  });
+});
+
+/* ── PARTICLE CANVAS ── */
+function initParticles() {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+  const pts = Array.from({length: 70}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - .5) * .5,
+    vy: (Math.random() - .5) * .5,
+    r: Math.random() * 2 + .5,
+    col: ['#00ffe7','#ff00c8','#7b2fff','#ffe600'][Math.floor(Math.random()*4)]
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.col;
+      ctx.fill();
+    });
+    // lines
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i+1; j < pts.length; j++) {
+        const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
+        if (d < 120) {
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.strokeStyle = `rgba(0,255,231,${(1 - d/120) * .08})`;
+          ctx.lineWidth = .5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ── STAT COUNTERS ── */
+function animateStats() {
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = parseInt(el.getAttribute('data-count'));
+    let val = 0;
+    const step = target / 60;
+    const iv = setInterval(() => {
+      val = Math.min(val + step, target);
+      el.textContent = Math.round(val) + (target >= 10 ? '+' : '');
+      if (val >= target) clearInterval(iv);
+    }, 20);
+  });
+}
+
+/* ── SKILL BARS ── */
+function animateSkillBars() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+          bar.style.transform = `scaleX(${bar.style.getPropertyValue('--w') || 1})`;
+          bar.classList.add('animated');
+        });
+      }
+    });
+  }, { threshold: .3 });
+  const skillSec = document.getElementById('skills');
+  if (skillSec) observer.observe(skillSec);
+}
+
+/* ── GRAVITY PHYSICS ── */
+function initGravity() {
+  const canvas = document.getElementById('gravity-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+
+  let objects = [];
+  let gravity = 0.8;
+  let bounce = 0.7;
+  let dragging = false;
+  let dragStart = null;
+  let dragEnd = null;
+
+  document.getElementById('grav-slider').addEventListener('input', e => gravity = parseFloat(e.target.value));
+  document.getElementById('bounce-slider').addEventListener('input', e => bounce = parseFloat(e.target.value));
+  document.getElementById('grav-clear').addEventListener('click', () => { objects = []; });
+  document.getElementById('grav-explode').addEventListener('click', () => {
+    objects.forEach(o => {
+      const a = Math.random() * Math.PI * 2;
+      const f = 8 + Math.random() * 8;
+      o.vx += Math.cos(a) * f;
+      o.vy += Math.sin(a) * f - 5;
+    });
+  });
+
+  const shapes = ['circle','rect','triangle'];
+  const colors = ['#00ffe7','#ff00c8','#ffe600','#7b2fff','#ff6b35'];
+
+  canvas.addEventListener('mousedown', e => {
+    dragging = true;
+    const r = canvas.getBoundingClientRect();
+    dragStart = { x: e.clientX - r.left, y: e.clientY - r.top };
+    dragEnd = { ...dragStart };
+  });
+  canvas.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const r = canvas.getBoundingClientRect();
+    dragEnd = { x: e.clientX - r.left, y: e.clientY - r.top };
+  });
+  canvas.addEventListener('mouseup', () => {
+    if (dragging && dragStart) {
+      const vx = (dragEnd.x - dragStart.x) * 0.1;
+      const vy = (dragEnd.y - dragStart.y) * 0.1;
+      objects.push({
+        x: dragStart.x, y: dragStart.y,
+        vx, vy,
+        r: 14 + Math.random() * 20,
+        shape: shapes[Math.floor(Math.random() * shapes.length)],
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rot: 0, rotV: (Math.random() - .5) * .2,
+        trail: []
+      });
+    }
+    dragging = false;
+    dragStart = null;
+  });
+
+  // Touch support
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    dragStart = { x: t.clientX - r.left, y: t.clientY - r.top };
+    dragEnd = { ...dragStart };
+    dragging = true;
+  }, {passive: false});
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!dragging) return;
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    dragEnd = { x: t.clientX - r.left, y: t.clientY - r.top };
+  }, {passive: false});
+  canvas.addEventListener('touchend', () => {
+    if (dragging && dragStart) {
+      const vx = (dragEnd.x - dragStart.x) * 0.1;
+      const vy = (dragEnd.y - dragStart.y) * 0.1;
+      objects.push({
+        x: dragStart.x, y: dragStart.y,
+        vx, vy, r: 14 + Math.random() * 20,
+        shape: shapes[Math.floor(Math.random() * shapes.length)],
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rot: 0, rotV: (Math.random() - .5) * .2,
+        trail: []
+      });
+    }
+    dragging = false; dragStart = null;
+  });
+
+  function drawShape(ctx, o) {
+    ctx.save();
+    ctx.translate(o.x, o.y);
+    ctx.rotate(o.rot);
+    ctx.shadowBlur = 18;
+    ctx.shadowColor = o.color;
+    ctx.strokeStyle = o.color;
+    ctx.lineWidth = 2;
+    ctx.fillStyle = o.color + '22';
+
+    if (o.shape === 'circle') {
+      ctx.beginPath(); ctx.arc(0, 0, o.r, 0, Math.PI*2);
+      ctx.fill(); ctx.stroke();
+    } else if (o.shape === 'rect') {
+      ctx.beginPath(); ctx.roundRect(-o.r, -o.r, o.r*2, o.r*2, 4);
+      ctx.fill(); ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(0, -o.r);
+      ctx.lineTo(o.r * .866, o.r * .5);
+      ctx.lineTo(-o.r * .866, o.r * .5);
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Grid
+    ctx.strokeStyle = 'rgba(0,255,231,.03)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < canvas.width; x += 50) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += 50) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+
+    // Drag arrow
+    if (dragging && dragStart) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0,255,231,.6)';
+      ctx.lineWidth = 2; ctx.setLineDash([5,5]);
+      ctx.beginPath();
+      ctx.moveTo(dragStart.x, dragStart.y);
+      ctx.lineTo(dragEnd.x, dragEnd.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(0,255,231,.8)';
+      ctx.beginPath(); ctx.arc(dragStart.x, dragStart.y, 6, 0, Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+
+    objects = objects.filter(o => o.x > -200 && o.x < canvas.width + 200);
+
+    objects.forEach(o => {
+      o.vy += gravity * .3;
+      o.vx *= 0.999;
+      o.x += o.vx; o.y += o.vy;
+      o.rot += o.rotV;
+
+      // Bounce off walls
+      if (o.x - o.r < 0) { o.x = o.r; o.vx *= -bounce; o.rotV *= -.8; }
+      if (o.x + o.r > canvas.width) { o.x = canvas.width - o.r; o.vx *= -bounce; o.rotV *= -.8; }
+      if (o.y + o.r > canvas.height) {
+        o.y = canvas.height - o.r;
+        o.vy *= -bounce;
+        o.vx *= 0.95;
+        if (Math.abs(o.vy) < .5) o.vy = 0;
+      }
+      if (o.y - o.r < 0) { o.y = o.r; o.vy *= -bounce; }
+
+      // Trail
+      o.trail.push({ x: o.x, y: o.y });
+      if (o.trail.length > 12) o.trail.shift();
+
+      // Draw trail
+      for (let i = 1; i < o.trail.length; i++) {
+        ctx.beginPath();
+        ctx.moveTo(o.trail[i-1].x, o.trail[i-1].y);
+        ctx.lineTo(o.trail[i].x, o.trail[i].y);
+        ctx.strokeStyle = o.color + Math.floor((i / o.trail.length) * 80).toString(16).padStart(2,'0');
+        ctx.lineWidth = o.r * .3 * (i / o.trail.length);
+        ctx.stroke();
+      }
+
+      drawShape(ctx, o);
+    });
+
+    document.getElementById('obj-count').textContent = 'OBJECTS: ' + objects.length;
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+/* ── GAMES ── */
+const overlay = document.getElementById('game-overlay');
+const gameCanvas = document.getElementById('game-canvas');
+const gameUI = document.getElementById('game-ui');
+const gCtx = gameCanvas.getContext('2d');
+let currentGame = null;
+let gameLoop = null;
+let gameKeys = {};
+
+document.addEventListener('keydown', e => { gameKeys[e.key] = true; });
+document.addEventListener('keyup', e => { gameKeys[e.key] = false; });
+
+document.getElementById('game-close').addEventListener('click', () => {
+  overlay.classList.remove('open');
+  if (gameLoop) { cancelAnimationFrame(gameLoop); gameLoop = null; }
+  currentGame = null;
+  gameKeys = {};
+});
+
+function launchGame(name) {
+  overlay.classList.add('open');
+  if (gameLoop) cancelAnimationFrame(gameLoop);
+  gameKeys = {};
+  currentGame = name;
+  if (name === 'pong') startPong();
+  else if (name === 'asteroid') startAsteroid();
+  else if (name === 'memory') startMemory();
+}
+
+/* PONG */
+function startPong() {
+  gameCanvas.width = 600; gameCanvas.height = 500;
+  const state = {
+    ball: { x: 300, y: 250, vx: 4, vy: 3, r: 9 },
+    p1: { y: 220, score: 0 },
+    p2: { y: 220, score: 0 },
+    pw: 12, ph: 80
+  };
+  gameUI.textContent = 'W/S — YOUR PADDLE | BOT CONTROLS RIGHT';
+
+  function drawPong() {
+    const { ball, p1, p2 } = state;
+    gCtx.fillStyle = '#050508';
+    gCtx.fillRect(0, 0, 600, 500);
+
+    // Grid
+    gCtx.strokeStyle = 'rgba(0,255,231,.04)';
+    for (let i = 0; i < 600; i += 40) {
+      gCtx.beginPath(); gCtx.moveTo(i,0); gCtx.lineTo(i,500); gCtx.stroke();
+    }
+    for (let i = 0; i < 500; i += 40) {
+      gCtx.beginPath(); gCtx.moveTo(0,i); gCtx.lineTo(600,i); gCtx.stroke();
+    }
+
+    // Center line
+    gCtx.setLineDash([10,10]);
+    gCtx.strokeStyle = 'rgba(0,255,231,.12)';
+    gCtx.lineWidth = 2;
+    gCtx.beginPath(); gCtx.moveTo(300,0); gCtx.lineTo(300,500); gCtx.stroke();
+    gCtx.setLineDash([]);
+
+    // Scores
+    gCtx.font = "900 72px 'Bebas Neue'";
+    gCtx.fillStyle = 'rgba(0,255,231,.12)';
+    gCtx.textAlign = 'center';
+    gCtx.fillText(p1.score, 150, 80);
+    gCtx.fillText(p2.score, 450, 80);
+
+    // Paddles
+    const drawPaddle = (x, y, col) => {
+      gCtx.shadowBlur = 20; gCtx.shadowColor = col;
+      gCtx.fillStyle = col;
+      gCtx.beginPath();
+      gCtx.roundRect(x, y, state.pw, state.ph, 6);
+      gCtx.fill();
+      gCtx.shadowBlur = 0;
+    };
+    drawPaddle(14, p1.y, '#00ffe7');
+    drawPaddle(574, p2.y, '#ff00c8');
+
+    // Ball
+    gCtx.shadowBlur = 30; gCtx.shadowColor = '#00ffe7';
+    gCtx.fillStyle = '#00ffe7';
+    gCtx.beginPath(); gCtx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2); gCtx.fill();
+    gCtx.shadowBlur = 0;
+
+    // Labels
+    gCtx.font = "11px 'Space Mono'"; gCtx.fillStyle = 'rgba(0,255,231,.3)';
+    gCtx.textAlign = 'left'; gCtx.fillText('YOU', 20, 488);
+    gCtx.textAlign = 'right'; gCtx.fillText('BOT', 580, 488);
+  }
+
+  function updatePong() {
+    const { ball, p1, p2 } = state;
+    // Player 1
+    if ((gameKeys['w'] || gameKeys['W'] || gameKeys['ArrowUp']) && p1.y > 0) p1.y -= 5;
+    if ((gameKeys['s'] || gameKeys['S'] || gameKeys['ArrowDown']) && p1.y < 500 - state.ph) p1.y += 5;
+    // Bot
+    const bot_center = p2.y + state.ph / 2;
+    if (bot_center < ball.y - 5) p2.y += 4.2;
+    if (bot_center > ball.y + 5) p2.y -= 4.2;
+    p2.y = Math.max(0, Math.min(500 - state.ph, p2.y));
+
+    ball.x += ball.vx; ball.y += ball.vy;
+    if (ball.y - ball.r < 0 || ball.y + ball.r > 500) ball.vy *= -1;
+
+    // P1 paddle
+    if (ball.x - ball.r < 26 && ball.y > p1.y && ball.y < p1.y + state.ph) {
+      ball.vx = Math.abs(ball.vx) * 1.05;
+      ball.vy += (ball.y - (p1.y + state.ph/2)) * .1;
+    }
+    // P2 paddle
+    if (ball.x + ball.r > 574 && ball.y > p2.y && ball.y < p2.y + state.ph) {
+      ball.vx = -Math.abs(ball.vx) * 1.05;
+      ball.vy += (ball.y - (p2.y + state.ph/2)) * .1;
+    }
+
+    // Score
+    if (ball.x < 0) { p2.score++; Object.assign(ball, {x:300,y:250,vx:4,vy:3}); }
+    if (ball.x > 600) { p1.score++; Object.assign(ball, {x:300,y:250,vx:-4,vy:3}); }
+
+    // Cap speed
+    const spd = Math.hypot(ball.vx, ball.vy);
+    if (spd > 12) { ball.vx = ball.vx/spd*12; ball.vy = ball.vy/spd*12; }
+  }
+
+  function pongFrame() {
+    updatePong(); drawPong();
+    gameLoop = requestAnimationFrame(pongFrame);
+  }
+  pongFrame();
+}
+
+/* ASTEROID */
+function startAsteroid() {
+  gameCanvas.width = 600; gameCanvas.height = 500;
+  let ship = { x: 300, y: 380, angle: -Math.PI/2, vx: 0, vy: 0 };
+  let bullets = [];
+  let asteroids = [];
+  let particles = [];
+  let score = 0;
+  let lives = 3;
+  let gameOver = false;
+  let fireCD = 0;
+
+  const spawnAsteroid = (x, y, r, vx, vy) => {
+    if (!x) { x = Math.random() < .5 ? -30 : 630; y = Math.random() * 500; }
+    const a = Math.random() * Math.PI * 2;
+    const spd = 1.5 + Math.random() * 2;
+    asteroids.push({
+      x, y, r: r || (30 + Math.random()*20),
+      vx: vx !== undefined ? vx : Math.cos(a)*spd,
+      vy: vy !== undefined ? vy : Math.sin(a)*spd,
+      rot: 0, rotV: (Math.random()-.5)*.05,
+      pts: Array.from({length:8}, (_,i) => {
+        const ang = (i/8)*Math.PI*2;
+        const d = 0.7 + Math.random()*0.3;
+        return [Math.cos(ang)*d, Math.sin(ang)*d];
+      })
+    });
+  };
+
+  for (let i = 0; i < 5; i++) spawnAsteroid();
+  gameUI.textContent = 'ARROWS / WASD — MOVE | SPACE — FIRE';
+
+  function drawAst() {
+    gCtx.fillStyle = '#050508';
+    gCtx.fillRect(0, 0, 600, 500);
+
+    // Stars
+    gCtx.fillStyle = 'rgba(255,255,255,.5)';
+    [[20,20],[80,50],[200,30],[260,70],[140,15],[40,80],[320,40],[450,90],[520,160],[380,200]].forEach(([sx,sy]) => {
+      gCtx.beginPath(); gCtx.arc(sx, sy, 1, 0, Math.PI*2); gCtx.fill();
+    });
+
+    // Score / lives
+    gCtx.font = "14px 'Space Mono'"; gCtx.fillStyle = 'rgba(0,255,231,.7)';
+    gCtx.textAlign = 'left'; gCtx.fillText('SCORE: ' + score, 20, 28);
+    gCtx.textAlign = 'right'; gCtx.fillText('LIVES: ' + '♥ '.repeat(lives), 580, 28);
+
+    // Bullets
+    bullets.forEach(b => {
+      gCtx.shadowBlur = 12; gCtx.shadowColor = '#ff00c8';
+      gCtx.fillStyle = '#ff00c8';
+      gCtx.beginPath(); gCtx.arc(b.x, b.y, 3, 0, Math.PI*2); gCtx.fill();
+      gCtx.shadowBlur = 0;
+    });
+
+    // Asteroids
+    asteroids.forEach(ast => {
+      gCtx.save();
+      gCtx.translate(ast.x, ast.y);
+      gCtx.rotate(ast.rot);
+      gCtx.shadowBlur = 10; gCtx.shadowColor = '#ffe600';
+      gCtx.strokeStyle = '#ffe600'; gCtx.lineWidth = 2; gCtx.fillStyle = 'rgba(255,230,0,.06)';
+      gCtx.beginPath();
+      ast.pts.forEach(([px,py],i) => {
+        i===0 ? gCtx.moveTo(px*ast.r, py*ast.r) : gCtx.lineTo(px*ast.r, py*ast.r);
+      });
+      gCtx.closePath(); gCtx.fill(); gCtx.stroke();
+      gCtx.shadowBlur = 0; gCtx.restore();
+    });
+
+    // Particles
+    particles.forEach(p => {
+      gCtx.globalAlpha = p.life;
+      gCtx.fillStyle = p.col;
+      gCtx.beginPath(); gCtx.arc(p.x, p.y, p.r, 0, Math.PI*2); gCtx.fill();
+    });
+    gCtx.globalAlpha = 1;
+
+    // Ship
+    if (!gameOver) {
+      gCtx.save();
+      gCtx.translate(ship.x, ship.y);
+      gCtx.rotate(ship.angle + Math.PI/2);
+      gCtx.shadowBlur = 20; gCtx.shadowColor = '#00ffe7';
+      gCtx.strokeStyle = '#00ffe7'; gCtx.lineWidth = 2;
+      gCtx.fillStyle = 'rgba(0,255,231,.08)';
+      gCtx.beginPath();
+      gCtx.moveTo(0,-18); gCtx.lineTo(12,14); gCtx.lineTo(0,8); gCtx.lineTo(-12,14);
+      gCtx.closePath(); gCtx.fill(); gCtx.stroke();
+      gCtx.shadowBlur = 0; gCtx.restore();
+    }
+
+    if (gameOver) {
+      gCtx.fillStyle = 'rgba(5,5,8,.8)';
+      gCtx.fillRect(0,0,600,500);
+      gCtx.font = "72px 'Bebas Neue'"; gCtx.fillStyle = '#ff00c8';
+      gCtx.textAlign = 'center'; gCtx.fillText('GAME OVER', 300, 230);
+      gCtx.font = "20px 'Space Mono'"; gCtx.fillStyle = '#00ffe7';
+      gCtx.fillText('SCORE: ' + score, 300, 280);
+      gCtx.font = "13px 'Space Mono'"; gCtx.fillStyle = 'rgba(255,255,255,.4)';
+      gCtx.fillText('PRESS SPACE TO RESTART', 300, 330);
+    }
+  }
+
+  function updateAst() {
+    if (gameOver) {
+      if (gameKeys[' ']) { startAsteroid(); return; }
+      return;
+    }
+
+    // Controls
+    if (gameKeys['ArrowLeft'] || gameKeys['a'] || gameKeys['A']) ship.angle -= .06;
+    if (gameKeys['ArrowRight'] || gameKeys['d'] || gameKeys['D']) ship.angle += .06;
+    if (gameKeys['ArrowUp'] || gameKeys['w'] || gameKeys['W']) {
+      ship.vx += Math.cos(ship.angle) * .2;
+      ship.vy += Math.sin(ship.angle) * .2;
+    }
+    if (gameKeys[' '] && fireCD <= 0) {
+      bullets.push({ x: ship.x + Math.cos(ship.angle)*20, y: ship.y + Math.sin(ship.angle)*20, vx: Math.cos(ship.angle)*10, vy: Math.sin(ship.angle)*10, life: 80 });
+      fireCD = 12;
+    }
+    if (fireCD > 0) fireCD--;
+
+    ship.vx *= .98; ship.vy *= .98;
+    ship.x = (ship.x + ship.vx + 600) % 600;
+    ship.y = (ship.y + ship.vy + 500) % 500;
+
+    // Bullets
+    bullets = bullets.filter(b => { b.x+=b.vx; b.y+=b.vy; b.life--; return b.life>0 && b.x>0 && b.x<600 && b.y>0 && b.y<500; });
+
+    // Asteroids
+    asteroids.forEach(ast => {
+      ast.x=(ast.x+ast.vx+600)%600; ast.y=(ast.y+ast.vy+500)%500; ast.rot+=ast.rotV;
+    });
+
+    // Bullet-asteroid collision
+    for (let b = bullets.length-1; b >= 0; b--) {
+      for (let a = asteroids.length-1; a >= 0; a--) {
+        const d = Math.hypot(bullets[b].x - asteroids[a].x, bullets[b].y - asteroids[a].y);
+        if (d < asteroids[a].r) {
+          for (let p = 0; p < 8; p++) {
+            const ang = Math.random()*Math.PI*2;
+            particles.push({ x: asteroids[a].x, y: asteroids[a].y, vx: Math.cos(ang)*3, vy: Math.sin(ang)*3, r: Math.random()*3+1, life: 1, col: '#ffe600' });
+          }
+          if (asteroids[a].r > 20) {
+            spawnAsteroid(asteroids[a].x, asteroids[a].y, asteroids[a].r*.55, asteroids[a].vx+1.5, asteroids[a].vy-1);
+            spawnAsteroid(asteroids[a].x, asteroids[a].y, asteroids[a].r*.55, asteroids[a].vx-1.5, asteroids[a].vy+1);
+          }
+          asteroids.splice(a,1); bullets.splice(b,1); score += 10;
+          if (asteroids.length === 0) for (let i=0;i<6;i++) spawnAsteroid();
+          break;
+        }
+      }
+    }
+
+    // Ship-asteroid collision
+    asteroids.forEach(ast => {
+      const d = Math.hypot(ship.x - ast.x, ship.y - ast.y);
+      if (d < ast.r + 12) {
+        lives--;
+        ship = { x: 300, y: 380, angle: -Math.PI/2, vx: 0, vy: 0 };
+        if (lives <= 0) gameOver = true;
+      }
+    });
+
+    // Particles decay
+    particles = particles.filter(p => { p.x+=p.vx; p.y+=p.vy; p.life-=.04; p.r*=.96; return p.life>0; });
+  }
+
+  function astFrame() { updateAst(); drawAst(); gameLoop = requestAnimationFrame(astFrame); }
+  astFrame();
+}
+
+/* MEMORY GAME */
+function startMemory() {
+  gameCanvas.width = 600; gameCanvas.height = 500;
+  const cols = ['#00ffe7','#ff00c8','#ffe600','#7b2fff','#ff6b35','#00ff88'];
+  let cards = [];
+  let flipped = [];
+  let matched = 0;
+  let moves = 0;
+  let canFlip = true;
+  let won = false;
+  let startTime = Date.now();
+
+  const pairs = [...cols, ...cols];
+  // Shuffle
+  for (let i = pairs.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
+  }
+
+  const cw = 75, ch = 85, cols2 = 4, rows = 3;
+  const ox = (600 - cols2*cw - (cols2-1)*12) / 2;
+  const oy = (500 - rows*ch - (rows-1)*12) / 2 + 20;
+
+  pairs.forEach((col, i) => {
+    const col2 = i % cols2, row = Math.floor(i / cols2);
+    cards.push({ x: ox + col2*(cw+12), y: oy + row*(ch+12), w: cw, h: ch, col, flipped: false, matched: false, flip: 0 });
+  });
+
+  gameUI.textContent = 'CLICK CARDS TO FLIP AND MATCH PAIRS';
+
+  function drawMemory() {
+    gCtx.fillStyle = '#050508';
+    gCtx.fillRect(0, 0, 600, 500);
+
+    // Title
+    gCtx.font = "32px 'Bebas Neue'"; gCtx.fillStyle = 'rgba(0,255,231,.15)';
+    gCtx.textAlign = 'center'; gCtx.fillText('COLOR MEMORY', 300, 38);
+
+    gCtx.font = "12px 'Space Mono'"; gCtx.fillStyle = 'rgba(255,255,255,.4)';
+    gCtx.textAlign = 'left'; gCtx.fillText('MOVES: ' + moves, 30, 38);
+    const elapsed = Math.floor((Date.now()-startTime)/1000);
+    gCtx.textAlign = 'right'; gCtx.fillText('TIME: ' + elapsed + 's', 570, 38);
+
+    cards.forEach((c, i) => {
+      const fp = c.flip;
+      const scaleX = Math.abs(Math.cos(fp * Math.PI));
+      gCtx.save();
+      gCtx.translate(c.x + c.w/2, c.y + c.h/2);
+      gCtx.scale(scaleX < .05 ? .05 : scaleX, 1);
+
+      if (c.matched) {
+        gCtx.shadowBlur = 20; gCtx.shadowColor = c.col;
+        gCtx.fillStyle = c.col + '44'; gCtx.strokeStyle = c.col; gCtx.lineWidth = 2;
+        gCtx.beginPath(); gCtx.roundRect(-c.w/2, -c.h/2, c.w, c.h, 8); gCtx.fill(); gCtx.stroke();
+        // Checkmark
+        gCtx.strokeStyle = c.col; gCtx.lineWidth = 3; gCtx.lineCap = 'round';
+        gCtx.beginPath(); gCtx.moveTo(-12, 0); gCtx.lineTo(-4, 10); gCtx.lineTo(14, -10); gCtx.stroke();
+      } else if (fp > .5 || c.flipped) {
+        gCtx.shadowBlur = 20; gCtx.shadowColor = c.col;
+        gCtx.fillStyle = c.col + '33'; gCtx.strokeStyle = c.col; gCtx.lineWidth = 2;
+        gCtx.beginPath(); gCtx.roundRect(-c.w/2, -c.h/2, c.w, c.h, 8); gCtx.fill(); gCtx.stroke();
+        gCtx.beginPath(); gCtx.arc(0, 0, 22, 0, Math.PI*2);
+        gCtx.fillStyle = c.col; gCtx.fill();
+        gCtx.shadowBlur = 0;
+      } else {
+        gCtx.fillStyle = 'rgba(255,255,255,.05)'; gCtx.strokeStyle = 'rgba(0,255,231,.2)'; gCtx.lineWidth = 1.5;
+        gCtx.beginPath(); gCtx.roundRect(-c.w/2, -c.h/2, c.w, c.h, 8); gCtx.fill(); gCtx.stroke();
+        gCtx.fillStyle = 'rgba(0,255,231,.2)';
+        gCtx.font = "28px 'Bebas Neue'"; gCtx.textAlign = 'center'; gCtx.textBaseline = 'middle';
+        gCtx.fillText('?', 0, 2);
+        gCtx.textBaseline = 'alphabetic';
+      }
+      gCtx.shadowBlur = 0; gCtx.restore();
+    });
+
+    if (won) {
+      gCtx.fillStyle = 'rgba(5,5,8,.85)'; gCtx.fillRect(0,0,600,500);
+      gCtx.font = "72px 'Bebas Neue'"; gCtx.fillStyle = '#00ffe7';
+      gCtx.textAlign = 'center'; gCtx.fillText('YOU WIN!', 300, 220);
+      gCtx.font = "20px 'Space Mono'"; gCtx.fillStyle = 'rgba(255,255,255,.6)';
+      gCtx.fillText(moves + ' MOVES · ' + Math.floor((Date.now()-startTime)/1000) + 's', 300, 270);
+      gCtx.font = "13px 'Space Mono'"; gCtx.fillStyle = 'rgba(0,255,231,.4)';
+      gCtx.fillText('CLICK TO PLAY AGAIN', 300, 330);
+    }
+  }
+
+  let flipAnimating = new Set();
+
+  function updateMemory() {
+    cards.forEach((c, i) => {
+      if (flipAnimating.has(i)) {
+        if (c.flipped) { c.flip = Math.min(c.flip + .08, 1); if (c.flip >= 1) flipAnimating.delete(i); }
+        else { c.flip = Math.max(c.flip - .08, 0); if (c.flip <= 0) flipAnimating.delete(i); }
+      }
+    });
+  }
+
+  canvas.onclick = null;
+  gameCanvas.addEventListener('click', e => {
+    if (won) { startMemory(); return; }
+    if (!canFlip) return;
+    const r = gameCanvas.getBoundingClientRect();
+    const mx2 = e.clientX - r.left, my2 = e.clientY - r.top;
+    const cx = gameCanvas.width / r.width;
+    const cy = gameCanvas.height / r.height;
+    const px = mx2 * cx, py = my2 * cy;
+
+    cards.forEach((c, i) => {
+      if (px >= c.x && px <= c.x+c.w && py >= c.y && py <= c.y+c.h && !c.flipped && !c.matched) {
+        c.flipped = true; flipAnimating.add(i); flipped.push(i);
+        if (flipped.length === 2) {
+          moves++;
+          canFlip = false;
+          setTimeout(() => {
+            const [a, b] = flipped;
+            if (cards[a].col === cards[b].col) {
+              cards[a].matched = cards[b].matched = true; matched += 2;
+              if (matched === cards.length) won = true;
+            } else {
+              cards[a].flipped = cards[b].flipped = false;
+              flipAnimating.add(a); flipAnimating.add(b);
+            }
+            flipped = []; canFlip = true;
+          }, 900);
+        }
+      }
+    });
+  });
+
+  function memFrame() { updateMemory(); drawMemory(); gameLoop = requestAnimationFrame(memFrame); }
+  memFrame();
+}
+
+/* ── SCROLL REVEAL ── */
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: .1 });
+
+document.querySelectorAll('.port-card, .game-card, .tool-chip, .stat-item').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = 'opacity .6s ease, transform .6s cubic-bezier(.23,1,.32,1)';
+  revObs.observe(el);
+});
+</script>
+</body>
+</html>
